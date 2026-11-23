@@ -3,3 +3,6 @@ __pycache__/
 *.w2v
 *.kv
 .DS_Store
+
+
+/private

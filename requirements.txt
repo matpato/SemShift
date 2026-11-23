@@ -5,3 +5,4 @@ scipy>=1.11
 numpy>=1.26
 matplotlib>=3.8
 jupyter
+networkx>=3.0

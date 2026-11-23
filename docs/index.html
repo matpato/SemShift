@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="SemShift: a hands-on tutorial on lexical and vector semantics (NLP, ISEL)">
 <meta name="author" content="Matilde Pato">
-<title>SemShift: you shall know a word by the corpus it keeps</title>
+<title>SemShift: you shall know a word by the corpus it keeps (PubMed vs. Reuters)</title>
 <style>
   :root{
     --ink:#16181d; --ink2:#4a4d55; --muted:#7b7f88; --line:#e4e2dc; --paper:#fbfaf7; --card:#ffffff;
-    --fin:#2a78d6; --fin-soft:#e8f1fc; --lit:#eb6834; --lit-soft:#fdeee7; --glove:#1baf7a;
+    --pub:#7a4fd1; --pub-soft:#f1ecfb; --fin:#2a78d6; --fin-soft:#e8f1fc; --glove:#1baf7a;
     --serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
     --sans: -apple-system, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -26,9 +26,9 @@
   /* hero: two worlds */
   .hero{display:grid;grid-template-columns:1fr 1fr;min-height:340px;border-bottom:1px solid var(--line)}
   .side{padding:56px 40px 40px;display:flex;flex-direction:column;justify-content:flex-end}
-  .side.fin{background:var(--fin-soft)} .side.lit{background:var(--lit-soft)}
+  .side.pub{background:var(--pub-soft)} .side.fin{background:var(--fin-soft)}
   .side .tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
-  .fin .tag{color:var(--fin)} .lit .tag{color:var(--lit)}
+  .pub .tag{color:var(--pub)} .fin .tag{color:var(--fin)}
   .side .word{font-family:var(--serif);font-size:84px;line-height:1;margin:10px 0 14px}
   .side .nbrs{font-family:var(--mono);font-size:15px;color:var(--ink2)}
   .strip{position:relative;color:#fff;background:#0b0b0b url("assets/banner.jpg") center 30%/cover no-repeat}
@@ -59,7 +59,7 @@
   .panes{display:grid;grid-template-columns:1fr 1fr 1fr}
   .pane{padding:22px 22px 26px;border-right:1px solid var(--line)} .pane:last-child{border-right:0}
   .pane h3{margin:0 0 12px;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
-  .pane.r h3{color:var(--fin)} .pane.g h3{color:var(--lit)} .pane.w h3{color:var(--glove)}
+  .pane.p h3{color:var(--pub)} .pane.r h3{color:var(--fin)} .pane.w h3{color:var(--glove)}
   .pane ol{margin:0;padding-left:20px;font-family:var(--mono);font-size:14.5px;line-height:1.9}
   .note{font-size:13.5px;color:var(--ink2);padding:14px 22px;border-top:1px solid var(--line);grid-column:1/-1;background:#faf9f6}
 
@@ -70,7 +70,7 @@
   .card h4{margin:4px 0 6px;font-size:17px}
   .card p{margin:0;font-size:14.5px;color:var(--ink2)}
   .card .lo{display:inline-block;margin-top:10px;font-size:12px;font-weight:600;color:var(--ink2);background:#f1efe9;border-radius:4px;padding:2px 7px}
-  .card.star{border-color:var(--lit)}
+  .card.star{border-color:var(--pub)}
 
   figure{margin:24px 0 0} figure img{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff}
   figcaption{font-size:14px;color:var(--ink2);margin-top:8px}
@@ -78,7 +78,7 @@
 
   table{border-collapse:collapse;width:100%;font-size:15px;margin-top:18px;background:var(--card)}
   th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)} th{font-size:13px;color:var(--muted);font-weight:600}
-  td.num{font-variant-numeric:tabular-nums}
+  td.num{font-variant-numeric:tabular-nums} td.good{color:#0f7a55;font-weight:600} td.bad{color:#b4372f;font-weight:600}
   code{font-family:var(--mono);font-size:14px;background:#f1efe9;padding:1px 5px;border-radius:4px}
   pre{background:var(--ink);color:#f3f2ee;padding:16px 18px;border-radius:10px;overflow:auto;font:14px/1.6 var(--mono)}
   footer{padding:36px 0 60px;color:var(--muted);font-size:14px}
@@ -99,27 +99,28 @@
   <a href="https://github.com/matpato/SemShift">GitHub</a>
 </div></nav>
 
-<header class="hero" aria-label="The word bank in two corpora">
+<header class="hero" aria-label="The word delivery in two corpora">
+  <div class="side pub">
+    <div class="tag">PubMed · clinical trial abstracts</div>
+    <div class="word">delivery</div>
+    <div class="nbrs" title="word2vec neighbours">cesarean · breech · deliveries · nonreassuring</div>
+  </div>
   <div class="side fin">
     <div class="tag">Reuters · financial news · 1987</div>
-    <div class="word">bank</div>
-    <div class="nbrs" title="PPMI neighbours">central · banks · governor · savings · bancorp</div>
-  </div>
-  <div class="side lit">
-    <div class="tag">Gutenberg · literature · 1611–1911</div>
-    <div class="word">bank</div>
-    <div class="nbrs">brink · hill · grove · hedge · surf</div>
+    <div class="word">delivery</div>
+    <div class="nbrs" title="word2vec neighbours">shipment · wheats · laydays · onwards</div>
   </div>
 </header>
 
 <div class="strip"><div class="title">
   <h1>You shall know a word by the <em>corpus</em> it keeps</h1>
-  <p class="lede">A hands-on tutorial on lexical and vector semantics. We let a computer read two very different worlds,
-  learn word meanings from scratch, and watch <em>bank</em>, <em>light</em>, <em>court</em> and <em>tender</em> change meaning.
-  WordNet, TF-IDF, PPMI, word2vec, GloVe, WSD, entity linking and bias, in one story that runs in under 10 minutes on Colab.</p>
+  <p class="lede">A hands-on tutorial on lexical and vector semantics. A computer reads 20,000 abstracts of clinical trials
+  (PubMed 20k RCT) and 10,788 Reuters news stories, learns word meanings from scratch, and finds out that
+  <em>depression</em>, <em>delivery</em>, <em>pressure</em> and <code style="background:rgba(255,255,255,.15);color:#fff">MS</code> mean different things in each world.
+  WordNet, TF-IDF, PPMI, word2vec, GloVe, WSD, entity linking, graphs, metrics and bias, in one notebook that runs on a free Colab CPU.</p>
   <div class="btns">
-    <a class="btn primary" href="https://colab.research.google.com/github/matpato/SemShift/blob/main/notebooks/SemShift_tutorial.ipynb">Open in Colab</a>
-    <a class="btn ghost" href="https://github.com/matpato/SemShift/blob/main/notebooks/SemShift_tutorial.ipynb">Read the notebook with outputs</a>
+    <a class="btn primary" href="https://colab.research.google.com/github/matpato/SemShift/blob/main/notebooks/SemShift_biomedical.ipynb">Open in Colab</a>
+    <a class="btn ghost" href="https://github.com/matpato/SemShift/blob/main/notebooks/SemShift_biomedical.ipynb">Read the notebook with outputs</a>
   </div>
   <p class="meta">NLP / PLN · MEIC &amp; MEIM · ISEL · Module 4: Semantics</p>
 </div>
@@ -129,14 +130,14 @@
 <section id="explore"><div class="wrap">
   <div class="kicker">Try it</div>
   <h2>One word, three worlds</h2>
-  <p class="sub">Nearest neighbours (cosine similarity) of the same word in three embedding spaces: word2vec trained on Reuters,
-  word2vec trained on Gutenberg, and pre-trained GloVe (Wikipedia + news, 6 B tokens). Pick a word.</p>
+  <p class="sub">Nearest neighbours (cosine similarity) of the same word in three embedding spaces: word2vec trained on PubMed,
+  word2vec trained on Reuters, and pre-trained GloVe (Wikipedia + news, 6 B tokens). Pick a word.</p>
   <div class="explorer">
     <div class="words" role="group" aria-label="Choose a word" id="words"></div>
     <div class="panes">
-      <div class="pane r"><h3>🏦 Reuters 1987</h3><ol id="pr"></ol></div>
-      <div class="pane g"><h3>📜 Gutenberg</h3><ol id="pg"></ol></div>
-      <div class="pane w"><h3>🌍 GloVe</h3><ol id="pw"></ol></div>
+      <div class="pane p"><h3>PubMed RCT</h3><ol id="pp"></ol></div>
+      <div class="pane r"><h3>Reuters 1987</h3><ol id="pr"></ol></div>
+      <div class="pane w"><h3>GloVe</h3><ol id="pw"></ol></div>
       <div class="note" id="note"></div>
     </div>
   </div>
@@ -145,56 +146,72 @@
 <section id="outline"><div class="wrap">
   <div class="kicker">The tutorial</div>
   <h2>Ten short sections, six learning outcomes</h2>
-  <p class="sub">Every step starts with a 🔮 <em>predict before you run</em> question and ends with a 💬 discussion.</p>
+  <p class="sub">Every step starts with a <em>predict before you run</em> question and ends with a discussion.</p>
   <div class="grid">
-    <div class="card"><div class="n">1</div><h4>WordNet</h4><p>Ten noun senses of <em>bank</em>; synonyms, hypernym paths, hyponyms, meronyms, antonyms; <em>banco</em> in Portuguese.</p><span class="lo">LO1</span></div>
-    <div class="card"><div class="n">2</div><h4>The company a word keeps</h4><p>Keyword-in-context and context counts reveal two meanings before any maths.</p><span class="lo">LO2</span></div>
-    <div class="card"><div class="n">3</div><h4>Sparse vectors</h4><p>TF-IDF book vectors cluster by author; word–context counts vs. PPMI; cosine by hand.</p><span class="lo">LO3 · LO4</span></div>
-    <div class="card"><div class="n">4</div><h4>Dense vectors</h4><p>Train skip-gram with negative sampling on each corpus in about a minute; compare with GloVe.</p><span class="lo">LO3 · LO6</span></div>
-    <div class="card star"><div class="n">5 ⭐</div><h4>Semantic-shift detector</h4><p>Align the two spaces (orthogonal Procrustes) and let the computer find <em>tender, chase, fed, suit</em>.</p><span class="lo">LO4</span></div>
-    <div class="card"><div class="n">6</div><h4>Word sense disambiguation</h4><p>MFS, domain MFS, Lesk and embeddings on 24 hand-labelled <em>bank</em> tokens.</p><span class="lo">LO5</span></div>
-    <div class="card"><div class="n">7</div><h4>Entity linking</h4><p><em>Jordan</em>: country, river or basketball player? Priors, context, NIL and live Wikidata candidates.</p><span class="lo">LO5</span></div>
-    <div class="card"><div class="n">8</div><h4>Limitations</h4><p>One vector per word, antonyms, OOV, and gender bias in 19th-century novels vs. GloVe.</p><span class="lo">LO6</span></div>
-    <div class="card"><div class="n">9 🇵🇹</div><h4>Bonus: Machado vs. Folha</h4><p><em>rede</em> (hammock → internet), <em>pena</em>, <em>real</em> (the 1994 currency).</p><span class="lo">all</span></div>
+    <div class="card"><div class="n">1</div><h4>WordNet</h4><p>The senses of <em>depression</em>, <em>delivery</em> and <em>administration</em>; synonyms, hypernyms, the meronyms of the heart.</p><span class="lo">LO1</span></div>
+    <div class="card"><div class="n">2</div><h4>The company a word keeps</h4><p>Context counts: <em>cesarean, vaginal, preterm</em> vs. <em>wheat, tonnes, futures</em>.</p><span class="lo">LO2</span></div>
+    <div class="card"><div class="n">3</div><h4>Sparse vectors</h4><p>A TF-IDF search engine over 20,000 abstracts, and why <em>heart attack</em> misses <em>myocardial infarction</em>; counts vs. PPMI.</p><span class="lo">LO3 · LO4</span></div>
+    <div class="card"><div class="n">4</div><h4>Dense vectors</h4><p>Train skip-gram on each corpus in about two minutes; compare with GloVe; analogies (<em>knee : arthroplasty :: hip : THA</em>).</p><span class="lo">LO3 · LO6</span></div>
+    <div class="card star"><div class="n">5</div><h4>Semantic-shift detector</h4><p>Align the two spaces (orthogonal Procrustes) and let the computer find <em>confidence, hearing, terminal, branch</em>.</p><span class="lo">LO4</span></div>
+    <div class="card"><div class="n">6</div><h4>Word sense disambiguation</h4><p>Six methods on 26 hand-labelled <em>delivery</em> sentences: birth, shipment or a manner of speaking?</p><span class="lo">LO5</span></div>
+    <div class="card"><div class="n">7</div><h4>Entity linking</h4><p><code>MS</code>: multiple sclerosis, mass spectrometry or Morgan Stanley? Corpus priors, context, NIL and live Wikidata candidates.</p><span class="lo">LO5</span></div>
+    <div class="card"><div class="n">8</div><h4>Limitations</h4><p>Antonyms (<em>positive</em> ≈ <em>negative</em>), new drugs missing from GloVe, one vector per word, and bias.</p><span class="lo">LO6</span></div>
+    <div class="card"><div class="n">9</div><h4>Graphs and metrics</h4><p>A word graph of trial topics, graph-based sense induction, purity/NMI/ARI, precision, recall and F1.</p><span class="lo">all</span></div>
   </div>
 </div></section>
 
 <section id="results"><div class="wrap">
   <div class="kicker">What students will see</div>
   <h2>Selected results</h2>
-  <figure><img src="assets/bank_two_spaces.png" alt="PCA projection of bank and its nearest neighbours in the Reuters and Gutenberg spaces"><figcaption>§4. <em>bank</em> and its neighbours: financial institutions vs. footpaths, cliffs and meadows.</figcaption></figure>
-  <figure style="max-width:620px"><img src="assets/tfidf_books.png" alt="Heatmap of cosine similarity between 18 Gutenberg books"><figcaption>§3. TF-IDF cosine between 18 books: Austen, Shakespeare and Chesterton form blocks by themselves.</figcaption></figure>
-  <figure><img src="assets/semantic_shift.png" alt="Bar chart of cosine distance after alignment for stable and shifted words"><figcaption>§5. After alignment, numbers and modal verbs barely move; <em>suit, common, chase, fed, tender</em> move the most.</figcaption></figure>
+  <figure><img src="assets/delivery_two_spaces.png" alt="PCA projection of delivery and its nearest neighbours in the PubMed and Reuters spaces"><figcaption>§4. <em>delivery</em> and its neighbours: childbirth in PubMed, shipments of wheat in Reuters.</figcaption></figure>
+  <figure><img src="assets/semantic_shift_bio.png" alt="Bar chart of cosine distance after alignment for stable and shifted words"><figcaption>§5. After alignment, numbers and modal verbs barely move; <em>confidence</em> (interval), <em>hearing</em> (loss), <em>terminal</em> (half-life) and <em>branch</em> (of an artery) move the most.</figcaption></figure>
 
-  <h3 style="margin-top:36px;font-family:var(--serif);font-weight:400;font-size:24px">§6. Which WSD method wins? (fine-grained accuracy)</h3>
+  <h3 style="margin-top:36px;font-family:var(--serif);font-weight:400;font-size:24px">§6. Which WSD method wins? (coarse accuracy on <em>delivery</em>)</h3>
   <table>
-    <thead><tr><th>method</th><th>Reuters</th><th>Gutenberg</th><th>why</th></tr></thead>
+    <thead><tr><th>method</th><th>Reuters (12)</th><th>PubMed (14)</th><th>why</th></tr></thead>
     <tbody>
-      <tr><td>Most frequent sense (WordNet)</td><td class="num">0.00</td><td class="num">0.67</td><td>WordNet's sense 1 is the river bank: frequencies from general text</td></tr>
-      <tr><td><b>Domain MFS</b> (from the corpus embeddings)</td><td class="num"><b>1.00</b></td><td class="num">0.67</td><td>the corpus tells us its dominant sense, without labels</td></tr>
-      <tr><td>NLTK Lesk</td><td class="num">0.17</td><td class="num">0.25</td><td>short glosses, accidental overlaps</td></tr>
-      <tr><td>Embeddings (GloVe)</td><td class="num">0.17</td><td class="num">0.33</td><td>always right on the <em>coarse</em> sense (1.00 / 1.00)</td></tr>
+      <tr><td>Most frequent sense (WordNet)</td><td class="num">0.92</td><td class="num bad">0.43</td><td>WordNet's sense 1 is the commercial delivery: it never answers "birth"</td></tr>
+      <tr><td>Domain MFS (from the corpus embeddings)</td><td class="num">0.92</td><td class="num">0.57</td><td>the corpus tells us its dominant sense, without labels</td></tr>
+      <tr><td>NLTK Lesk</td><td class="num">0.83</td><td class="num bad">0.36</td><td>short glosses, accidental overlaps</td></tr>
+      <tr><td>Simplified Lesk</td><td class="num">0.92</td><td class="num">0.43</td><td>glosses plus examples, still few overlaps</td></tr>
+      <tr><td>Embeddings (GloVe, general)</td><td class="num good">1.00</td><td class="num good">1.00</td><td>large general corpus: good glosses <em>and</em> good contexts</td></tr>
+      <tr><td>Embeddings (domain word2vec)</td><td class="num good">1.00</td><td class="num">0.64</td><td>domain vectors know the domain, not the dictionary glosses</td></tr>
     </tbody>
   </table>
 
-  <figure><img src="assets/gender_bias.png" alt="Dot plot of occupations projected on the he minus she direction in Gutenberg and GloVe"><figcaption>§8. Occupations on the <em>he − she</em> direction. An embedding is a mirror of its corpus.</figcaption></figure>
+  <div class="two">
+    <figure><img src="assets/wsd_confusion.png" alt="Confusion matrices of the MFS baseline and GloVe WSD"><figcaption>§9. MFS reaches 65 % accuracy but 0 % recall on births (macro F1 0.26). Accuracy hides the class that fails.</figcaption></figure>
+    <figure><img src="assets/delivery_sense_graph.png" alt="Graph of 1,383 occurrences of delivery coloured by induced sense"><figcaption>§9. 1,383 occurrences of <em>delivery</em> linked to similar contexts; Louvain finds 4 senses without labels (purity 0.88, NMI 0.49).</figcaption></figure>
+  </div>
+
+  <h3 style="margin-top:36px;font-family:var(--serif);font-weight:400;font-size:24px">§7. Entity linking: same abbreviation, different prior</h3>
+  <table>
+    <thead><tr><th>P(entity | <code>MS</code>)</th><th>multiple sclerosis</th><th>mass spectrometry</th><th>Morgan Stanley</th></tr></thead>
+    <tbody>
+      <tr><td>in PubMed</td><td class="num">0.77</td><td class="num">0.22</td><td class="num">0.01</td></tr>
+      <tr><td>in Reuters</td><td class="num">0.09</td><td class="num">0.09</td><td class="num">0.82</td></tr>
+    </tbody>
+  </table>
+  <p class="sub" style="margin-top:12px">On 8 test mentions: prior only 4/8, dense context 5/8, dense context with a NIL check 7/8.</p>
+
+  <figure><img src="assets/bias_bio.png" alt="Dot plot of occupations on he minus she in GloVe and conditions on male minus female in PubMed"><figcaption>§8. Occupations on the <em>he − she</em> direction in GloVe, and conditions on <em>male − female</em> in PubMed. An embedding is a mirror of its corpus.</figcaption></figure>
 </div></section>
 
 <section id="run"><div class="wrap">
   <div class="kicker">Run it</div>
   <h2>Colab or local, CPU only</h2>
-  <p class="sub">Click <b>Open in Colab</b> and choose <em>Runtime → Run all</em>. Or locally:</p>
+  <p class="sub">Click <b>Open in Colab</b> and choose <em>Runtime → Run all</em> (about 8–10 minutes). Or locally:</p>
 <pre>git clone https://github.com/matpato/SemShift.git && cd SemShift
 pip install -r requirements.txt
-jupyter lab notebooks/SemShift_tutorial.ipynb</pre>
+jupyter lab notebooks/SemShift_biomedical.ipynb</pre>
   <table>
     <thead><tr><th>Data</th><th>Size</th><th>Source</th></tr></thead>
     <tbody>
-      <tr><td>Reuters-21578 (ApteMod)</td><td class="num">10,788 docs · 1.3 M words</td><td>NLTK</td></tr>
-      <tr><td>Project Gutenberg selection</td><td class="num">18 books · 2.1 M words</td><td>NLTK</td></tr>
+      <tr><td>PubMed 20k RCT (Dernoncourt &amp; Lee, 2017)</td><td class="num">20,000 abstracts · 4.8 M tokens</td><td><a href="https://github.com/Franck-Dernoncourt/pubmed-rct">GitHub</a></td></tr>
+      <tr><td>Reuters-21578 (ApteMod)</td><td class="num">10,788 docs · 1.3 M tokens</td><td>NLTK</td></tr>
       <tr><td>WordNet 3.0 + Open Multilingual WordNet</td><td class="num">117k synsets</td><td>NLTK</td></tr>
       <tr><td>GloVe <code>glove-wiki-gigaword-100</code></td><td class="num">400k words · 128 MB</td><td>gensim-data</td></tr>
-      <tr><td>Machado de Assis · Mac-Morpho (<em>Folha</em> 1994)</td><td class="num">2.5 M · 1.0 M words</td><td>NLTK</td></tr>
+      <tr><td>Wikidata</td><td class="num">entity identifiers</td><td>wikidata.org</td></tr>
     </tbody>
   </table>
 </div></section>
@@ -202,38 +219,41 @@ jupyter lab notebooks/SemShift_tutorial.ipynb</pre>
 <footer><div class="wrap">
   Matilde Pato · ISEL, Instituto Politécnico de Lisboa · MIT licence ·
   Banner photo by Jason Leung on Unsplash. Prepared with the help of Claude (Anthropic) and reviewed by the instructor. Neighbour lists come from one training run; yours may differ slightly.
+  This tutorial is about language, not medicine: nothing here is clinical advice.
 </div></footer>
 
 <script>
-const DATA = {"bank": {"reuters": ["banks", "satoshi", "england", "central", "sumita", "westminster"], "gutenberg": ["pool", "cafe", "meadow", "footpath", "lawn", "slope"], "glove": ["banks", "banking", "credit", "investment", "financial", "securities"]}, "interest": {"reuters": ["adjusts", "spectrum", "term", "moratorium", "visa", "overdraft"], "gutenberg": ["negative", "importance", "uneasiness", "candour", "gallantry", "civility"], "glove": ["rates", "raise", "value", "concern", "borrowing", "rate"]}, "stock": {"reuters": ["common", "shares", "berkey", "preferred", "exchangeable", "datacard"], "gutenberg": ["included", "scanty", "tidy", "slated", "dimensions", "turtledoves"], "glove": ["shares", "stocks", "market", "exchange", "trading", "investors"]}, "light": {"reuters": ["sweet", "bonny", "crudes", "netbacks", "naphtha", "slope"], "gutenberg": ["shineth", "darkness", "brightness", "shine", "stars", "noonday"], "glove": ["dark", "bright", "lights", "air", "blue", "visible"]}, "court": {"reuters": ["appeals", "injunction", "chancery", "bankruptcy", "appeal", "justice"], "gutenberg": ["porch", "inner", "chambers", "temple", "entry", "palace"], "glove": ["judge", "appeals", "supreme", "courts", "trial", "case"]}, "house": {"reuters": ["subcommittee", "senate", "white", "appropriations", "speaker", "testifying"], "gutenberg": ["chamber", "tabernacle", "tent", "millo", "palace", "shiloh"], "glove": ["office", "senate", "room", "houses", "capitol", "building"]}, "board": {"reuters": ["directors", "unanimously", "nominees", "supervisory", "acceptance", "slate"], "gutenberg": ["pequod", "trading", "tenons", "ship", "bushel", "schooner"], "glove": ["commission", "committee", "directors", "executive", "council", "panel"]}, "mine": {"reuters": ["gold", "leaching", "copper", "geodome", "chibougamau", "leach"], "gutenberg": ["thine", "my", "evildoers", "hatest", "wrongfully", "deepe"], "glove": ["coal", "mines", "miners", "mining", "accident", "explosion"]}, "tender": {"reuters": ["offer", "tenders", "tendering", "loving", "tendered", "offers"], "gutenberg": ["giver", "vernal", "glow", "wholesome", "yielding", "youthful"], "glove": ["sweet", "cooked", "tenders", "crisp", "fresh", "flavorful"]}, "sound": {"reuters": ["finances", "prerequisite", "leiner", "grave", "behavior", "cooling"], "gutenberg": ["cornet", "drums", "trumpet", "flute", "mirth", "sonorous"], "glove": ["sounds", "music", "acoustic", "voice", "noise", "guitar"]}, "fair": {"reuters": ["lanes", "credible", "crack", "enhancing", "fairness", "investigate"], "gutenberg": ["fairest", "lovely", "shines", "beautiful", "virgin", "opportune"], "glove": ["good", "ensure", "kind", "better", "should", "reasonable"]}, "spirit": {"reuters": ["berne", "abiding", "solidarity", "reaffirming", "louvre", "effectiveness"], "gutenberg": ["heart", "understanding", "wisdom", "sanctification", "oath", "meekness"], "glove": ["passion", "faith", "love", "sense", "devotion", "god"]}};
+const DATA = {"depression": {"pubmed": ["anxiety", "depressive", "somatization", "delusional", "inventory-ii", "bdi-ii"], "reuters": ["deteriorating", "disruptions", "dwindling", "deteriorate", "rash", "posing"], "glove": ["illness", "anxiety", "severe", "onset", "schizophrenia", "disorder"]}, "delivery": {"pubmed": ["cesarean", "caesarean", "deliveries", "breech", "delivering", "nonreassuring"], "reuters": ["shipment", "wheats", "laydays", "srw", "onwards", "optional"], "glove": ["deliveries", "supplies", "supply", "dropped", "crude", "delivered"]}, "pressure": {"pubmed": ["pressures", "bp", "paco", "transpulmonary", "rpp", "abp"], "reuters": ["deflect", "rein", "nervously", "dependence", "grip", "pushing"], "glove": ["pressures", "push", "ease", "despite", "move", "because"]}, "administration": {"pubmed": ["nemonoxacin", "subanesthetic", "intravenous", "administrations", "injection", "coadministration"], "reuters": ["reagan", "aides", "fda", "congressmen", "congressional", "congress"], "glove": ["government", "policy", "bush", "congress", "officials", "clinton"]}, "recovery": {"pubmed": ["awakening", "ambulation", "sensorial", "ues", "doms", "patient-perceived"], "reuters": ["pickup", "improvement", "sustained", "turnaround", "slump", "vigorous"], "glove": ["economy", "growth", "economic", "slowing", "turnaround", "improvement"]}, "growth": {"pubmed": ["platelet-derived", "insulin-like", "factor-i", "fibroblast", "epidermal", "hgf"], "reuters": ["slower", "slowdown", "gdp", "pickup", "gnp", "sluggish"], "glove": ["economy", "slowing", "rise", "increase", "decline", "robust"]}, "failure": {"pubmed": ["congestive", "decompensated", "hhf", "multifactor", "heart", "ahf"], "reuters": ["predatory", "dumping", "honour", "reintroduction", "jeopardy", "deadlock"], "glove": ["failed", "failing", "problems", "result", "inability", "cause"]}, "attack": {"pubmed": ["tia", "ischemic", "ischaemic", "stroke", "attacks", "cryptogenic"], "reuters": ["warship", "iranian", "missile", "raid", "platforms", "persian"], "glove": ["attacks", "suicide", "bombing", "raid", "attacked", "killed"]}, "labor": {"pubmed": ["labour", "tocolysis", "expectant", "ripening", "nulliparous", "cesarean"], "reuters": ["labour", "wage", "housing", "exceptionally", "programs", "urban"], "glove": ["labour", "unions", "employment", "union", "workers", "welfare"]}, "operation": {"pubmed": ["surgery", "procedure", "exsufflation", "harvest", "tlh", "rot"], "reuters": ["operations", "murdochville", "amusement", "leaseback", "bowling", "retirement"], "glove": ["operations", "part", "launched", "mission", "effort", "raid"]}, "positive": {"pubmed": ["negative", "rdt", "end-expiratory", "bilevel", "epap", "post-rt"], "reuters": ["minimal", "curve", "subdued", "gloomy", "depressing", "bullish"], "glove": ["negative", "strong", "consistent", "critical", "results", "given"]}, "margin": {"pubmed": ["non-inferiority", "boundary", "noninferiority", "pnon-inferiority", "fgg", "gtv"], "reuters": ["deliverable", "allowable", "comex", "unpaid", "allocating", "redemptions"], "glove": ["margins", "percentage", "percent", "gain", "votes", "narrow"]}, "culture": {"pubmed": ["cultures", "smears", "u-pcr", "rdt", "mrs-pcr", "histopathology"], "reuters": [], "glove": ["cultural", "cultures", "traditions", "tradition", "religion", "history"]}, "tender": {"pubmed": ["swollen", "joints", "sjc", "sij", "sacroiliac", "metacarpophalangeal"], "reuters": ["offer", "tenders", "tendering", "loving", "banner", "tendered"], "glove": ["sweet", "cooked", "tenders", "crisp", "fresh", "flavorful"]}};
 const NOTES = {
-  bank: "Homonymy resolved by the corpus. GloVe follows the most frequent (financial) sense.",
-  light: "In 1987 oil news, light sweet crude is a grade of oil.",
-  mine: "In the Bible, mine is a pronoun (thine and mine): a different part of speech.",
-  house: "The US House of Representatives vs. a dwelling, a temple, a palace.",
-  court: "A tribunal vs. a courtyard: the corpus picks a different WordNet sense.",
-  board: "Board of directors vs. a plank on a ship (the Pequod!).",
-  tender: "A tender offer for shares vs. a tender glow.",
-  interest: "Interest rates and the LIBOR vs. importance and uneasiness.",
-  stock: "Common and preferred stock vs. scattered neighbours: the word is rare in the novels (51 times).",
-  sound: "Sound finances vs. the sound of a trumpet.",
-  spirit: "Rare and vague in news; the Holy Spirit in the Bible.",
-  fair: "Fair and reasonable vs. fair and lovely."
+ "depression": "A mood disorder (and the Beck Depression Inventory, BDI-II) vs. a slump in the economy.",
+ "delivery": "Childbirth (cesarean, breech) vs. shipment of goods (wheat, lay days). GloVe follows the commercial sense.",
+ "pressure": "Blood pressure (BP, arterial, transpulmonary) vs. political and market pressure.",
+ "administration": "Giving a drug (intravenous, injection) vs. the Reagan administration.",
+ "recovery": "Recovery after anaesthesia (awakening, ambulation) vs. economic recovery.",
+ "growth": "Growth factors (insulin-like, platelet-derived) vs. GDP growth.",
+ "failure": "Heart failure (congestive, decompensated) vs. failure of trade talks.",
+ "attack": "Transient ischaemic attack and stroke vs. missile attacks in the Persian Gulf.",
+ "labor": "Labour in childbirth (tocolysis, ripening) vs. the labour market.",
+ "operation": "A surgical operation vs. a business operation.",
+ "positive": "In PubMed the nearest neighbour of positive is negative: antonyms share contexts.",
+ "margin": "The non-inferiority margin of a trial vs. trading and profit margins.",
+ "culture": "A microbiological culture (smears, PCR) vs. traditions. Too rare in Reuters to get a vector.",
+ "tender": "Tender, swollen joints (rheumatology) vs. a tender offer for shares."
 };
 const wordsEl = document.getElementById("words");
 function show(w){
   for (const b of wordsEl.children) b.setAttribute("aria-pressed", b.textContent === w);
-  for (const [id, k] of [["pr","reuters"],["pg","gutenberg"],["pw","glove"]]) {
+  for (const [id, k] of [["pp","pubmed"],["pr","reuters"],["pw","glove"]]) {
     const L = DATA[w][k];
     document.getElementById(id).innerHTML = L.length ? L.map(x => `<li>${x}</li>`).join("") : "<li style='list-style:none;margin-left:-20px;color:#7b7f88'>not in vocabulary</li>";
   }
   document.getElementById("note").textContent = NOTES[w] || "";
 }
-Object.keys(DATA).forEach((w, i) => {
+Object.keys(DATA).forEach(w => {
   const b = document.createElement("button"); b.textContent = w; b.type = "button";
   b.addEventListener("click", () => show(w)); wordsEl.appendChild(b);
 });
-if (Object.keys(DATA).length) show(Object.keys(DATA)[0]);
+show(Object.keys(DATA)[0]);
 </script>
 </body>
 </html>
