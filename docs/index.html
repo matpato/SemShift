@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="SemShift: a hands-on tutorial on lexical and vector semantics (NLP, ISEL)">
+<meta name="author" content="Matilde Pato">
+<title>SemShift: you shall know a word by the corpus it keeps</title>
+<style>
+  :root{
+    --ink:#16181d; --ink2:#4a4d55; --muted:#7b7f88; --line:#e4e2dc; --paper:#fbfaf7; --card:#ffffff;
+    --fin:#2a78d6; --fin-soft:#e8f1fc; --lit:#eb6834; --lit-soft:#fdeee7; --glove:#1baf7a;
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    --sans: -apple-system, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  *{box-sizing:border-box} html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--sans)}
+  a{color:var(--fin)}
+  nav{position:sticky;top:0;z-index:5;background:rgba(251,250,247,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav .in{max-width:1080px;margin:0 auto;display:flex;gap:22px;align-items:center;padding:12px 24px;font-size:14px}
+  nav b{font-family:var(--serif);font-size:18px;margin-right:auto}
+  nav a{color:var(--ink2);text-decoration:none} nav a:hover{color:var(--ink)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+  /* hero: two worlds */
+  .hero{display:grid;grid-template-columns:1fr 1fr;min-height:340px;border-bottom:1px solid var(--line)}
+  .side{padding:56px 40px 40px;display:flex;flex-direction:column;justify-content:flex-end}
+  .side.fin{background:var(--fin-soft)} .side.lit{background:var(--lit-soft)}
+  .side .tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+  .fin .tag{color:var(--fin)} .lit .tag{color:var(--lit)}
+  .side .word{font-family:var(--serif);font-size:84px;line-height:1;margin:10px 0 14px}
+  .side .nbrs{font-family:var(--mono);font-size:15px;color:var(--ink2)}
+  .strip{position:relative;color:#fff;background:#0b0b0b url("assets/banner.jpg") center 30%/cover no-repeat}
+  .strip::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.88) 0%,rgba(0,0,0,.72) 55%,rgba(0,0,0,.35) 100%)}
+  .title{position:relative;max-width:1080px;margin:0 auto;padding:56px 24px 40px}
+  .strip .lede{color:#e7e6e1} .strip .meta{font-size:14px;color:#b9b8b2;margin:0}
+  .strip .btn{border-color:#fff} .strip .btn.primary{background:#fff;color:var(--ink)} .strip .btn.ghost{color:#fff}
+  .credit{position:absolute;right:12px;bottom:8px;font-size:11px;color:#9b9a95}
+  .credit a{color:#b9b8b2}
+  h1{font-family:var(--serif);font-weight:400;font-size:44px;line-height:1.15;margin:0 0 10px}
+  h1 em{font-style:italic}
+  .lede{font-size:19px;color:var(--ink2);max-width:760px}
+  .btns{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 8px}
+  .btn{display:inline-block;padding:11px 18px;border-radius:8px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid var(--ink)}
+  .btn.primary{background:var(--ink);color:#fff} .btn.ghost{color:var(--ink);background:transparent}
+
+  section{padding:56px 0;border-bottom:1px solid var(--line)}
+  h2{font-family:var(--serif);font-weight:400;font-size:32px;margin:0 0 8px}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px}
+  p.sub{color:var(--ink2);max-width:760px;margin-top:0}
+
+  /* explorer */
+  .explorer{display:grid;grid-template-columns:220px 1fr;gap:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:24px}
+  .words{border-right:1px solid var(--line);padding:10px}
+  .words button{display:block;width:100%;text-align:left;font:16px var(--serif);padding:9px 12px;border:0;background:none;border-radius:6px;cursor:pointer;color:var(--ink2)}
+  .words button:hover{background:#f3f2ee}
+  .words button[aria-pressed=true]{background:var(--ink);color:#fff}
+  .panes{display:grid;grid-template-columns:1fr 1fr 1fr}
+  .pane{padding:22px 22px 26px;border-right:1px solid var(--line)} .pane:last-child{border-right:0}
+  .pane h3{margin:0 0 12px;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+  .pane.r h3{color:var(--fin)} .pane.g h3{color:var(--lit)} .pane.w h3{color:var(--glove)}
+  .pane ol{margin:0;padding-left:20px;font-family:var(--mono);font-size:14.5px;line-height:1.9}
+  .note{font-size:13.5px;color:var(--ink2);padding:14px 22px;border-top:1px solid var(--line);grid-column:1/-1;background:#faf9f6}
+
+  /* outline */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .card .n{font-family:var(--serif);font-size:28px;color:var(--muted)}
+  .card h4{margin:4px 0 6px;font-size:17px}
+  .card p{margin:0;font-size:14.5px;color:var(--ink2)}
+  .card .lo{display:inline-block;margin-top:10px;font-size:12px;font-weight:600;color:var(--ink2);background:#f1efe9;border-radius:4px;padding:2px 7px}
+  .card.star{border-color:var(--lit)}
+
+  figure{margin:24px 0 0} figure img{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff}
+  figcaption{font-size:14px;color:var(--ink2);margin-top:8px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+
+  table{border-collapse:collapse;width:100%;font-size:15px;margin-top:18px;background:var(--card)}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)} th{font-size:13px;color:var(--muted);font-weight:600}
+  td.num{font-variant-numeric:tabular-nums}
+  code{font-family:var(--mono);font-size:14px;background:#f1efe9;padding:1px 5px;border-radius:4px}
+  pre{background:var(--ink);color:#f3f2ee;padding:16px 18px;border-radius:10px;overflow:auto;font:14px/1.6 var(--mono)}
+  footer{padding:36px 0 60px;color:var(--muted);font-size:14px}
+
+  @media (max-width:860px){
+    .hero{grid-template-columns:1fr} .side{padding:36px 24px} .side .word{font-size:60px}
+    .explorer{grid-template-columns:1fr} .words{display:flex;flex-wrap:wrap;gap:4px;border-right:0;border-bottom:1px solid var(--line)}
+    .words button{width:auto} .panes{grid-template-columns:1fr} .pane{border-right:0;border-bottom:1px solid var(--line)}
+    .grid,.two{grid-template-columns:1fr} h1{font-size:34px}
+    nav .in{gap:14px} nav a.opt{display:none}
+  }
+</style>
+</head>
+<body>
+<nav><div class="in">
+  <b>SemShift</b>
+  <a href="#explore">Explore</a><a class="opt" href="#outline">Outline</a><a class="opt" href="#results">Results</a><a class="opt" href="#run">Run it</a>
+  <a href="https://github.com/matpato/SemShift">GitHub</a>
+</div></nav>
+
+<header class="hero" aria-label="The word bank in two corpora">
+  <div class="side fin">
+    <div class="tag">Reuters · financial news · 1987</div>
+    <div class="word">bank</div>
+    <div class="nbrs" title="PPMI neighbours">central · banks · governor · savings · bancorp</div>
+  </div>
+  <div class="side lit">
+    <div class="tag">Gutenberg · literature · 1611–1911</div>
+    <div class="word">bank</div>
+    <div class="nbrs">brink · hill · grove · hedge · surf</div>
+  </div>
+</header>
+
+<div class="strip"><div class="title">
+  <h1>You shall know a word by the <em>corpus</em> it keeps</h1>
+  <p class="lede">A hands-on tutorial on lexical and vector semantics. We let a computer read two very different worlds,
+  learn word meanings from scratch, and watch <em>bank</em>, <em>light</em>, <em>court</em> and <em>tender</em> change meaning.
+  WordNet, TF-IDF, PPMI, word2vec, GloVe, WSD, entity linking and bias, in one story that runs in under 10 minutes on Colab.</p>
+  <div class="btns">
+    <a class="btn primary" href="https://colab.research.google.com/github/matpato/SemShift/blob/main/notebooks/SemShift_tutorial.ipynb">Open in Colab</a>
+    <a class="btn ghost" href="https://github.com/matpato/SemShift/blob/main/notebooks/SemShift_tutorial.ipynb">Read the notebook with outputs</a>
+  </div>
+  <p class="meta">NLP / PLN · MEIC &amp; MEIM · ISEL · Module 4: Semantics</p>
+</div>
+<div class="credit">Photo: <a href="https://unsplash.com/@ninjason">Jason Leung</a> / <a href="https://unsplash.com/photos/a-black-and-white-photo-of-a-computer-screen-LiyazcC4xnQ">Unsplash</a></div>
+</div>
+
+<section id="explore"><div class="wrap">
+  <div class="kicker">Try it</div>
+  <h2>One word, three worlds</h2>
+  <p class="sub">Nearest neighbours (cosine similarity) of the same word in three embedding spaces: word2vec trained on Reuters,
+  word2vec trained on Gutenberg, and pre-trained GloVe (Wikipedia + news, 6 B tokens). Pick a word.</p>
+  <div class="explorer">
+    <div class="words" role="group" aria-label="Choose a word" id="words"></div>
+    <div class="panes">
+      <div class="pane r"><h3>🏦 Reuters 1987</h3><ol id="pr"></ol></div>
+      <div class="pane g"><h3>📜 Gutenberg</h3><ol id="pg"></ol></div>
+      <div class="pane w"><h3>🌍 GloVe</h3><ol id="pw"></ol></div>
+      <div class="note" id="note"></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="outline"><div class="wrap">
+  <div class="kicker">The tutorial</div>
+  <h2>Ten short sections, six learning outcomes</h2>
+  <p class="sub">Every step starts with a 🔮 <em>predict before you run</em> question and ends with a 💬 discussion.</p>
+  <div class="grid">
+    <div class="card"><div class="n">1</div><h4>WordNet</h4><p>Ten noun senses of <em>bank</em>; synonyms, hypernym paths, hyponyms, meronyms, antonyms; <em>banco</em> in Portuguese.</p><span class="lo">LO1</span></div>
+    <div class="card"><div class="n">2</div><h4>The company a word keeps</h4><p>Keyword-in-context and context counts reveal two meanings before any maths.</p><span class="lo">LO2</span></div>
+    <div class="card"><div class="n">3</div><h4>Sparse vectors</h4><p>TF-IDF book vectors cluster by author; word–context counts vs. PPMI; cosine by hand.</p><span class="lo">LO3 · LO4</span></div>
+    <div class="card"><div class="n">4</div><h4>Dense vectors</h4><p>Train skip-gram with negative sampling on each corpus in about a minute; compare with GloVe.</p><span class="lo">LO3 · LO6</span></div>
+    <div class="card star"><div class="n">5 ⭐</div><h4>Semantic-shift detector</h4><p>Align the two spaces (orthogonal Procrustes) and let the computer find <em>tender, chase, fed, suit</em>.</p><span class="lo">LO4</span></div>
+    <div class="card"><div class="n">6</div><h4>Word sense disambiguation</h4><p>MFS, domain MFS, Lesk and embeddings on 24 hand-labelled <em>bank</em> tokens.</p><span class="lo">LO5</span></div>
+    <div class="card"><div class="n">7</div><h4>Entity linking</h4><p><em>Jordan</em>: country, river or basketball player? Priors, context, NIL and live Wikidata candidates.</p><span class="lo">LO5</span></div>
+    <div class="card"><div class="n">8</div><h4>Limitations</h4><p>One vector per word, antonyms, OOV, and gender bias in 19th-century novels vs. GloVe.</p><span class="lo">LO6</span></div>
+    <div class="card"><div class="n">9 🇵🇹</div><h4>Bonus: Machado vs. Folha</h4><p><em>rede</em> (hammock → internet), <em>pena</em>, <em>real</em> (the 1994 currency).</p><span class="lo">all</span></div>
+  </div>
+</div></section>
+
+<section id="results"><div class="wrap">
+  <div class="kicker">What students will see</div>
+  <h2>Selected results</h2>
+  <figure><img src="assets/bank_two_spaces.png" alt="PCA projection of bank and its nearest neighbours in the Reuters and Gutenberg spaces"><figcaption>§4. <em>bank</em> and its neighbours: financial institutions vs. footpaths, cliffs and meadows.</figcaption></figure>
+  <figure style="max-width:620px"><img src="assets/tfidf_books.png" alt="Heatmap of cosine similarity between 18 Gutenberg books"><figcaption>§3. TF-IDF cosine between 18 books: Austen, Shakespeare and Chesterton form blocks by themselves.</figcaption></figure>
+  <figure><img src="assets/semantic_shift.png" alt="Bar chart of cosine distance after alignment for stable and shifted words"><figcaption>§5. After alignment, numbers and modal verbs barely move; <em>suit, common, chase, fed, tender</em> move the most.</figcaption></figure>
+
+  <h3 style="margin-top:36px;font-family:var(--serif);font-weight:400;font-size:24px">§6. Which WSD method wins? (fine-grained accuracy)</h3>
+  <table>
+    <thead><tr><th>method</th><th>Reuters</th><th>Gutenberg</th><th>why</th></tr></thead>
+    <tbody>
+      <tr><td>Most frequent sense (WordNet)</td><td class="num">0.00</td><td class="num">0.67</td><td>WordNet's sense 1 is the river bank: frequencies from general text</td></tr>
+      <tr><td><b>Domain MFS</b> (from the corpus embeddings)</td><td class="num"><b>1.00</b></td><td class="num">0.67</td><td>the corpus tells us its dominant sense, without labels</td></tr>
+      <tr><td>NLTK Lesk</td><td class="num">0.17</td><td class="num">0.25</td><td>short glosses, accidental overlaps</td></tr>
+      <tr><td>Embeddings (GloVe)</td><td class="num">0.17</td><td class="num">0.33</td><td>always right on the <em>coarse</em> sense (1.00 / 1.00)</td></tr>
+    </tbody>
+  </table>
+
+  <figure><img src="assets/gender_bias.png" alt="Dot plot of occupations projected on the he minus she direction in Gutenberg and GloVe"><figcaption>§8. Occupations on the <em>he − she</em> direction. An embedding is a mirror of its corpus.</figcaption></figure>
+</div></section>
+
+<section id="run"><div class="wrap">
+  <div class="kicker">Run it</div>
+  <h2>Colab or local, CPU only</h2>
+  <p class="sub">Click <b>Open in Colab</b> and choose <em>Runtime → Run all</em>. Or locally:</p>
+<pre>git clone https://github.com/matpato/SemShift.git && cd SemShift
+pip install -r requirements.txt
+jupyter lab notebooks/SemShift_tutorial.ipynb</pre>
+  <table>
+    <thead><tr><th>Data</th><th>Size</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>Reuters-21578 (ApteMod)</td><td class="num">10,788 docs · 1.3 M words</td><td>NLTK</td></tr>
+      <tr><td>Project Gutenberg selection</td><td class="num">18 books · 2.1 M words</td><td>NLTK</td></tr>
+      <tr><td>WordNet 3.0 + Open Multilingual WordNet</td><td class="num">117k synsets</td><td>NLTK</td></tr>
+      <tr><td>GloVe <code>glove-wiki-gigaword-100</code></td><td class="num">400k words · 128 MB</td><td>gensim-data</td></tr>
+      <tr><td>Machado de Assis · Mac-Morpho (<em>Folha</em> 1994)</td><td class="num">2.5 M · 1.0 M words</td><td>NLTK</td></tr>
+    </tbody>
+  </table>
+</div></section>
+
+<footer><div class="wrap">
+  Matilde Pato · ISEL, Instituto Politécnico de Lisboa · MIT licence ·
+  Banner photo by Jason Leung on Unsplash. Prepared with the help of Claude (Anthropic) and reviewed by the instructor. Neighbour lists come from one training run; yours may differ slightly.
+</div></footer>
+
+<script>
+const DATA = {"bank": {"reuters": ["banks", "satoshi", "england", "central", "sumita", "westminster"], "gutenberg": ["pool", "cafe", "meadow", "footpath", "lawn", "slope"], "glove": ["banks", "banking", "credit", "investment", "financial", "securities"]}, "interest": {"reuters": ["adjusts", "spectrum", "term", "moratorium", "visa", "overdraft"], "gutenberg": ["negative", "importance", "uneasiness", "candour", "gallantry", "civility"], "glove": ["rates", "raise", "value", "concern", "borrowing", "rate"]}, "stock": {"reuters": ["common", "shares", "berkey", "preferred", "exchangeable", "datacard"], "gutenberg": ["included", "scanty", "tidy", "slated", "dimensions", "turtledoves"], "glove": ["shares", "stocks", "market", "exchange", "trading", "investors"]}, "light": {"reuters": ["sweet", "bonny", "crudes", "netbacks", "naphtha", "slope"], "gutenberg": ["shineth", "darkness", "brightness", "shine", "stars", "noonday"], "glove": ["dark", "bright", "lights", "air", "blue", "visible"]}, "court": {"reuters": ["appeals", "injunction", "chancery", "bankruptcy", "appeal", "justice"], "gutenberg": ["porch", "inner", "chambers", "temple", "entry", "palace"], "glove": ["judge", "appeals", "supreme", "courts", "trial", "case"]}, "house": {"reuters": ["subcommittee", "senate", "white", "appropriations", "speaker", "testifying"], "gutenberg": ["chamber", "tabernacle", "tent", "millo", "palace", "shiloh"], "glove": ["office", "senate", "room", "houses", "capitol", "building"]}, "board": {"reuters": ["directors", "unanimously", "nominees", "supervisory", "acceptance", "slate"], "gutenberg": ["pequod", "trading", "tenons", "ship", "bushel", "schooner"], "glove": ["commission", "committee", "directors", "executive", "council", "panel"]}, "mine": {"reuters": ["gold", "leaching", "copper", "geodome", "chibougamau", "leach"], "gutenberg": ["thine", "my", "evildoers", "hatest", "wrongfully", "deepe"], "glove": ["coal", "mines", "miners", "mining", "accident", "explosion"]}, "tender": {"reuters": ["offer", "tenders", "tendering", "loving", "tendered", "offers"], "gutenberg": ["giver", "vernal", "glow", "wholesome", "yielding", "youthful"], "glove": ["sweet", "cooked", "tenders", "crisp", "fresh", "flavorful"]}, "sound": {"reuters": ["finances", "prerequisite", "leiner", "grave", "behavior", "cooling"], "gutenberg": ["cornet", "drums", "trumpet", "flute", "mirth", "sonorous"], "glove": ["sounds", "music", "acoustic", "voice", "noise", "guitar"]}, "fair": {"reuters": ["lanes", "credible", "crack", "enhancing", "fairness", "investigate"], "gutenberg": ["fairest", "lovely", "shines", "beautiful", "virgin", "opportune"], "glove": ["good", "ensure", "kind", "better", "should", "reasonable"]}, "spirit": {"reuters": ["berne", "abiding", "solidarity", "reaffirming", "louvre", "effectiveness"], "gutenberg": ["heart", "understanding", "wisdom", "sanctification", "oath", "meekness"], "glove": ["passion", "faith", "love", "sense", "devotion", "god"]}};
+const NOTES = {
+  bank: "Homonymy resolved by the corpus. GloVe follows the most frequent (financial) sense.",
+  light: "In 1987 oil news, light sweet crude is a grade of oil.",
+  mine: "In the Bible, mine is a pronoun (thine and mine): a different part of speech.",
+  house: "The US House of Representatives vs. a dwelling, a temple, a palace.",
+  court: "A tribunal vs. a courtyard: the corpus picks a different WordNet sense.",
+  board: "Board of directors vs. a plank on a ship (the Pequod!).",
+  tender: "A tender offer for shares vs. a tender glow.",
+  interest: "Interest rates and the LIBOR vs. importance and uneasiness.",
+  stock: "Common and preferred stock vs. scattered neighbours: the word is rare in the novels (51 times).",
+  sound: "Sound finances vs. the sound of a trumpet.",
+  spirit: "Rare and vague in news; the Holy Spirit in the Bible.",
+  fair: "Fair and reasonable vs. fair and lovely."
+};
+const wordsEl = document.getElementById("words");
+function show(w){
+  for (const b of wordsEl.children) b.setAttribute("aria-pressed", b.textContent === w);
+  for (const [id, k] of [["pr","reuters"],["pg","gutenberg"],["pw","glove"]]) {
+    const L = DATA[w][k];
+    document.getElementById(id).innerHTML = L.length ? L.map(x => `<li>${x}</li>`).join("") : "<li style='list-style:none;margin-left:-20px;color:#7b7f88'>not in vocabulary</li>";
+  }
+  document.getElementById("note").textContent = NOTES[w] || "";
+}
+Object.keys(DATA).forEach((w, i) => {
+  const b = document.createElement("button"); b.textContent = w; b.type = "button";
+  b.addEventListener("click", () => show(w)); wordsEl.appendChild(b);
+});
+if (Object.keys(DATA).length) show(Object.keys(DATA)[0]);
+</script>
+</body>
+</html>

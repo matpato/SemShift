@@ -1,0 +1,5 @@
+.ipynb_checkpoints/
+__pycache__/
+*.w2v
+*.kv
+.DS_Store

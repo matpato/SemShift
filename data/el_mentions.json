@@ -1,0 +1,56 @@
+[
+ {
+  "source": "Reuters",
+  "mention": "Jordan",
+  "text": "USDA said private exporters reported sales of 200,000 tonnes of wheat to Jordan for delivery during the 1987/88 marketing year.",
+  "gold": "Q810"
+ },
+ {
+  "source": "Reuters",
+  "mention": "Jordan",
+  "text": "Jordan and Co, a privately held firm based in Portland, Me., said it agreed to the merger.",
+  "gold": "NIL"
+ },
+ {
+  "source": "Gutenberg",
+  "mention": "Jordan",
+  "text": "He took up also the mantle of Elijah, and went back, and stood by the bank of Jordan, and smote the waters.",
+  "gold": "Q40059"
+ },
+ {
+  "source": "Gutenberg",
+  "mention": "Jordan",
+  "text": "And Lot lifted up his eyes, and beheld all the plain of Jordan, that it was well watered every where.",
+  "gold": "Q40059"
+ },
+ {
+  "source": "slides",
+  "mention": "Jordan",
+  "text": "Jordan scored 40 points for the Bulls last night.",
+  "gold": "Q41421"
+ },
+ {
+  "source": "Reuters",
+  "mention": "Shell",
+  "text": "The Royal Dutch/Shell Group unit agreed to pay 20 mln dlrs to settle refiner pricing issues and 160 mln dlrs to settle crude oil pricing issues.",
+  "gold": "Q154950"
+ },
+ {
+  "source": "Reuters",
+  "mention": "shell",
+  "text": "Chatsworth Enterprises Inc, a publicly held shell corporation, said it signed a letter of intent to merge.",
+  "gold": "NIL"
+ },
+ {
+  "source": "Gutenberg",
+  "mention": "shell",
+  "text": "One, two, three, came out plump and fluffy; but when the fourth shell broke, out came a little half-chick!",
+  "gold": "NIL"
+ },
+ {
+  "source": "invented",
+  "mention": "shell",
+  "text": "She picked up a beautiful pink shell from the sand on the beach near the sea.",
+  "gold": "Q213096"
+ }
+]

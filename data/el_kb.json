@@ -1,0 +1,36 @@
+{
+ "jordan": [
+  {
+   "qid": "Q810",
+   "label": "Jordan (country)",
+   "desc": "country in Western Asia, a kingdom east of Israel with capital Amman; an Arab state in the Middle East that imports wheat and grain",
+   "prior": 0.45
+  },
+  {
+   "qid": "Q41421",
+   "label": "Michael Jordan",
+   "desc": "American basketball player who played for the Chicago Bulls in the NBA, scored many points and won six championships",
+   "prior": 0.4
+  },
+  {
+   "qid": "Q40059",
+   "label": "Jordan River",
+   "desc": "river in West Asia which flows through the Sea of Galilee to the Dead Sea; its waters, plain and valley appear in the Bible",
+   "prior": 0.1
+  }
+ ],
+ "shell": [
+  {
+   "qid": "Q154950",
+   "label": "Shell plc",
+   "desc": "British multinational oil and gas company, formerly Royal Dutch Shell, active in petroleum refining, crude oil, fuel and gasoline",
+   "prior": 0.6
+  },
+  {
+   "qid": "Q213096",
+   "label": "seashell",
+   "desc": "hard protective outer layer created by a marine animal such as a mollusc, snail, clam or oyster, often found on beaches by the sea",
+   "prior": 0.4
+  }
+ ]
+}
