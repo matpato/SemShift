@@ -1,0 +1,50 @@
+[
+ {
+  "corpus": "pubmed",
+  "mention": "MS",
+  "text": "Venous angioplasty is not an effective treatment for MS over the short term and may exacerbate underlying disease activity.",
+  "gold": "multiple sclerosis"
+ },
+ {
+  "corpus": "pubmed",
+  "mention": "MS",
+  "text": "Disease-specific serum free fatty acids (FFAs) were quantified using chip-based direct-infusion nanoelectrospray ionization Fourier transform ion cyclotron resonance MS.",
+  "gold": "mass spectrometry"
+ },
+ {
+  "corpus": "reuters",
+  "mention": "MS",
+  "text": "Morgan Stanley and Co <MS> rose 4-1/4 to 74-7/8.",
+  "gold": "Morgan Stanley"
+ },
+ {
+  "corpus": "pubmed",
+  "mention": "MS",
+  "text": "This trial aims to evaluate if treating non-diabetic patients with MS and LVDD with metformin improves diastolic function.",
+  "gold": "NIL"
+ },
+ {
+  "corpus": "pubmed",
+  "mention": "PD",
+  "text": "Approved by hospital ethics committee, 60 PD patients undergoing brain nuclei lesion ablation were randomly allocated into 3 groups.",
+  "gold": "Parkinson's disease"
+ },
+ {
+  "corpus": "pubmed",
+  "mention": "PD",
+  "text": "GAL-021 stimulated ventilation at the highest doses, suggesting that greater infusion rates may be required for maximum PD effects.",
+  "gold": "pharmacodynamics"
+ },
+ {
+  "corpus": "reuters",
+  "mention": "PD",
+  "text": "Analysts said Phelps Dodge Corp <PD> will be a strong performer because it is the largest U.S. copper producer.",
+  "gold": "Phelps Dodge"
+ },
+ {
+  "corpus": "pubmed",
+  "mention": "PD",
+  "text": "Although both treatments resulted in significant improvements in dysphagia scores, LM was significantly favored over PD after 1 and 3 years.",
+  "gold": "NIL"
+ }
+]

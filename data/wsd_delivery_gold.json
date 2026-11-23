@@ -1,0 +1,132 @@
+[
+ {
+  "corpus": "reuters",
+  "text": "The contract provides for the delivery of 48,000 lbs, plus or minus two pct, of bulk HFCS-55 meeting specified standards regarding its physical and chemical properties.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "reuters",
+  "text": "Cargill Inc of Minnesota took two shipments, totalling 83,000 tonnes priced between 92.00 and 92.93 U.S. Dlrs per tonne c and f Taiwan for September 5-20 / September 10-25 delivery.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "reuters",
+  "text": "USDA SAYS WHEAT PURCHASED FROM FOREIGN SELLERS The U.S. Agriculture Department said private U.S. exporters reported purchases from foreign sellers of 120,000 tonnes of wheat for delivery to unknown destinations.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "reuters",
+  "text": "CSCE TO PUT ADDITIONAL MARGIN ON JULY COCOA A 250 dlr spot charge will be added to the New York cocoa futures, July delivery, contract starting Wednesday, March 18, the Coffee, Sugar and Cocoa Exchange said.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "reuters",
+  "text": "Normally Syria calls white sugar buying tenders for forward delivery, and last month's spot requirement resulted in the sale of several cargoes.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "reuters",
+  "text": "Sales of wheat and corn to the USSR for delivery during the fourth year of the agreement totaled 8,182, 500 tonnes -- 4,080, 500 tonnes of wheat and 4,102, 300 tonnes of corn.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "reuters",
+  "text": "The department noted the sales are the first reported for delivery during the fifth year of the Agreement, which began October 1,1987.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "reuters",
+  "text": "The March delivery ceases trading March 17, making May and July the two nearby unlimited positions.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "reuters",
+  "text": "\"The data we have in hand do not provide clearcut evidence that the deterioration in the trade balance has yet been reversed,\" Volcker said in remarks prepared for delivery to a luncheon for community leaders here.",
+  "gold": "manner_of_speaking.n.01"
+ },
+ {
+  "corpus": "reuters",
+  "text": "Delivery method will be by in-line or in-well transfer, inter-facility transfer or pumpover, or book transfer and cannot be done earlier than the tenth calendar day of the delivery month, according to the exchange.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "reuters",
+  "text": "The department said the cattle are for delivery May 7-June 7,1987, and the bonus awarded was 1,888.06 dlrs per head.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "reuters",
+  "text": "The cattle are for delivery May, 1987-October, 1988, it said.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "Assignment to the Project DULCE intervention led to improvements in preventive health care delivery and utilization and accelerated access to concrete supports among low-income families.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "We randomly assigned infants born at 25 weeks 0 days to 28 weeks 6 days of gestation to receive SLI (25 cm H2O for 15 seconds) followed by nasal continuous positive airway pressure (nCPAP) or nCPAP alone in the delivery room.",
+  "gold": "delivery.n.02"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "Three hundred and four women (84 %) were followed until delivery.",
+  "gold": "delivery.n.02"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "To assess the effect on mode of delivery of the routine use of labour epidural analgesia (EA) compared with analgesia on request.",
+  "gold": "delivery.n.02"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "Poor tolerance of laryngoscopy was reported in 6.5 % with comparable distribution between anesthetic delivery methods.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "Further research building upon the current study in unpacking the relative strengths and weaknesses for the high and low intensity treatments would be beneficial for service delivery.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "To assess whether outpatient cervical ripening at 41 0/7 weeks of gestation with the nitric oxide donor isosorbide mononitrate reduces cesarean delivery rates in nulliparous women with an unfavorable cervix.",
+  "gold": "delivery.n.02"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "We hypothesized that design differences between NCs would influence O2 delivery and ETCO2 detection.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "The primary outcome was glycemic control measured with hemoglobin A1c < 7 % at delivery.",
+  "gold": "delivery.n.02"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "The most common reason for loss to follow-up was delivery of baby prior to follow-up (n = 9).",
+  "gold": "delivery.n.02"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "Wider contextual (economic climate, unprecedented wet weather) and organisational (workload, car parking facilities) issues were identified that influenced the delivery of, and response to, the intervention.",
+  "gold": "delivery.n.01"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "No statistically significant difference was found between the two groups in gestational weight gain, pregnancy length, mode of delivery, first and second stage of labour, perineal tear, and 1st and 5th min Apgar score.",
+  "gold": "delivery.n.02"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "We investigated the effect of immediate delivery versus expectant monitoring on maternal and neonatal outcomes in such women.",
+  "gold": "delivery.n.02"
+ },
+ {
+  "corpus": "pubmed",
+  "text": "Intradermal MVA85A, a candidate vaccine against tuberculosis, induces high amounts of Ag85A-specific CD4 T cells in adults who have already received the BCG vaccine, but aerosol delivery of this vaccine might offer immunological and logistical advantages.",
+  "gold": "delivery.n.01"
+ }
+]

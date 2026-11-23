@@ -1,0 +1,42 @@
+{
+ "MS": [
+  {
+   "id": "multiple sclerosis",
+   "qid": "Q8277",
+   "name": "multiple sclerosis",
+   "desc": "chronic autoimmune disease of the central nervous system that damages the myelin around nerve axons; relapsing disability, lesions, neurologist, interferon, natalizumab"
+  },
+  {
+   "id": "mass spectrometry",
+   "qid": "Q180809",
+   "name": "mass spectrometry",
+   "desc": "analytical technique that measures the mass-to-charge ratio of ions; used with liquid chromatography to quantify drug and metabolite concentrations in plasma and serum samples"
+  },
+  {
+   "id": "Morgan Stanley",
+   "qid": null,
+   "name": "morgan stanley",
+   "desc": "American investment bank and financial services company in New York; shares, stock, securities, underwriting, merger and buyout advice"
+  }
+ ],
+ "PD": [
+  {
+   "id": "Parkinson's disease",
+   "qid": "Q11085",
+   "name": "parkinson",
+   "desc": "neurodegenerative disorder of the brain affecting movement, with tremor, rigidity and slowness; treated with levodopa, deep brain stimulation or lesion surgery of brain nuclei"
+  },
+  {
+   "id": "pharmacodynamics",
+   "qid": null,
+   "name": "pharmacodynamic",
+   "desc": "branch of pharmacology studying the effects of a drug on the body, the relation between drug dose, concentration and response"
+  },
+  {
+   "id": "Phelps Dodge",
+   "qid": null,
+   "name": "phelps dodge",
+   "desc": "American mining company, the largest United States copper producer; copper mines, metal prices, shares and acquisitions"
+  }
+ ]
+}
